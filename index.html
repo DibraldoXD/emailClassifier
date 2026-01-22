@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoU | emailClassifier
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            orange: '#f97316', // Laranja do Logo (tailwind orange-500)
+                            dark: '#0f172a',   // Azul Marinho Fundo (tailwind slate-900)
+                            card: '#1e293b',   // Azul Marinho Cartões (tailwind slate-800)
+                            text: '#e2e8f0',   // Texto Claro (tailwind slate-200)
+                            muted: '#94a3b8'   // Texto Muted (tailwind slate-400)
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Efeito de vidro para o tema escuro */
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            /* slate-800 com transparência */
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Loader com a cor laranja da marca */
+        .loader {
+            border-top-color: #f97316;
+            /* brand.orange */
+            -webkit-animation: spinner 1.5s linear infinite;
+            animation: spinner 1.5s linear infinite;
+        }
+
+        @-webkit-keyframes spinner {
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        @keyframes spinner {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Estilização da barra de rolagem */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #f97316;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ea580c;
+        }
+    </style>
+</head>
+
+<body class="bg-brand-dark min-h-screen font-sans text-brand-text selection:bg-brand-orange/30">
+
+    <header class="bg-brand-dark/50 glass sticky top-0 z-50 border-b border-white/10 px-4 py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3 group cursor-default">
+
+                <div
+                    class="w-12 h-12 rounded-lg overflow-hidden border border-brand-orange/30 shadow-lg transition-transform group-hover:scale-105 duration-300">
+                    <img src="autou_logo.jpg" alt="Logo AutoU" class="w-full h-full object-cover"
+                        onerror="this.onerror=null; this.src='https://via.placeholder.com/48?text=AU';">
+                </div>
+
+                <h1 class="text-2xl font-bold tracking-tight text-white">
+                    Auto<span class="text-brand-orange">U</span>
+                </h1>
+            </div>
+
+            <span
+                class="text-xs font-medium bg-brand-orange/10 text-brand-orange px-3 py-1.5 rounded-full border border-brand-orange/30 tracking-wide ">
+                emailClassifier
+            </span>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-12 max-w-4xl">
+
+        <section class="glass p-8 rounded-3xl shadow-2xl mb-10 animate-fade-in-up">
+            <h2 class="text-xl font-semibold mb-8 flex items-center text-white">
+                <span class="bg-brand-orange/20 p-2 rounded-lg mr-4">
+                    <i class="fa-solid fa-envelope-open-text text-brand-orange text-xl"></i>
+                </span>
+                Analisar Novo Email
+            </h2>
+
+            <div class="space-y-8">
+                <div>
+                    <label for="emailText" class="block text-sm font-medium text-brand-muted mb-3 ml-1">Conteúdo do
+                        Email</label>
+                    <textarea id="emailText" rows="6"
+                        class="w-full p-5 rounded-2xl bg-brand-card border border-slate-700 placeholder-brand-muted/50 text-brand-text focus:ring-2 focus:ring-brand-orange focus:border-transparent outline-none transition-all resize-none shadow-inner"
+                        placeholder="Cole aqui o texto do email para análise..."></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-brand-muted mb-3 ml-1">Ou anexe um arquivo</label>
+                    <div class="flex items-center justify-center w-full relative group">
+                        <div id="dropzone"
+                            class="relative w-full h-40 flex flex-col items-center justify-center border-2 border-dashed border-slate-700 rounded-2xl bg-brand-card/50 hover:bg-brand-card hover:border-brand-orange/50 transition-all cursor-pointer overflow-hidden">
+
+                            <button id="btnRemoveFile" onclick="removerArquivo(event)"
+                                class="hidden absolute top-3 right-3 bg-red-500/80 hover:bg-red-600 text-white w-8 h-8 rounded-full shadow-lg items-center justify-center z-30 transition-all hover:scale-110 hover:rotate-90 active:scale-95 backdrop-blur-sm">
+                                <i class="fa-solid fa-xmark text-sm"></i>
+                            </button>
+
+                            <label for="emailFile"
+                                class="w-full h-full flex flex-col items-center justify-center cursor-pointer p-6 z-10">
+                                <div id="uploadIcon"
+                                    class="mb-4 p-4 bg-brand-dark rounded-full group-hover:scale-110 transition-transform shadow-lg border border-white/5">
+                                    <i class="fa-solid fa-cloud-arrow-up text-3xl text-brand-orange"></i>
+                                </div>
+                                <p id="fileInfo" class="text-sm text-brand-muted text-center">
+                                    <span class="font-semibold text-brand-orange group-hover:underline">Clique para
+                                        carregar</span> ou arraste <br> arquivos .PDF ou .TXT
+                                </p>
+                                <input id="emailFile" type="file" class="hidden" accept=".pdf,.txt"
+                                    onchange="mostrarArquivoSelecionado()" />
+                            </label>
+
+                            <div
+                                class="absolute inset-0 bg-brand-orange/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button onclick="processarEmail()"
+                    class="w-full bg-gradient-to-r from-brand-orange to-orange-600 hover:from-orange-600 hover:to-brand-orange text-white font-bold py-5 rounded-2xl transition-all shadow-lg shadow-brand-orange/20 hover:shadow-brand-orange/40 flex justify-center items-center group active:scale-[0.98]">
+                    <span class="tracking-wide">PROCESSAR COM IA</span>
+                    <i class="fa-solid fa-bolt ml-3 group-hover:animate-pulse text-lg"></i>
+                </button>
+            </div>
+        </section>
+
+        <div id="loading" class="hidden flex flex-col items-center py-16 animate-fade-in">
+            <div class="relative w-20 h-20 mb-6">
+                <div class="absolute inset-0 rounded-full border-4 border-slate-700/30"></div>
+                <div
+                    class="absolute inset-0 rounded-full border-t-4 border-brand-orange animate-spin shadow-lg shadow-brand-orange/50">
+                </div>
+            </div>
+            <p class="text-brand-muted font-medium animate-pulse tracking-wide">A IA da AutoU está analisando...</p>
+        </div>
+
+        <section id="resultSection" class="hidden space-y-8 animate-fade-in-up">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+
+                <div class="glass p-8 rounded-3xl border-t-4 shadow-xl transition-all hover:-translate-y-1"
+                    id="categoryCard">
+                    <div class="flex items-center justify-between mb-4">
+                        <p class="text-xs uppercase tracking-widest text-brand-muted font-bold flex items-center">
+                            <i class="fa-solid fa-tags mr-2 opacity-70"></i> Classificação
+                        </p>
+                        <span id="confidenceBadge"
+                            class="text-xs font-bold px-3 py-1 rounded-full bg-slate-800 border border-slate-700 text-brand-muted">
+                            IA Confiança
+                        </span>
+                    </div>
+                    <h3 id="categoryResult" class="text-3xl font-black text-white mb-2 tracking-tight">---</h3>
+                    <div class="h-2 w-full bg-slate-700/50 rounded-full overflow-hidden relative">
+                        <div id="confidenceBar"
+                            class="h-full bg-brand-orange transition-all duration-1000 ease-out rounded-full"
+                            style="width: 0%"></div>
+                    </div>
+                    <p id="confidenceResult" class="text-sm text-brand-muted mt-3 font-medium text-right">--%</p>
+                </div>
+
+                <div
+                    class="glass p-8 rounded-3xl shadow-xl border border-white/5 transition-all hover:-translate-y-1 flex flex-col">
+                    <p class="text-xs uppercase tracking-widest text-brand-muted font-bold mb-6 flex items-center">
+                        <i class="fa-solid fa-robot mr-2 opacity-70"></i> Resposta Sugerida
+                    </p>
+                    <div class="flex-grow relative">
+                        <i class="fa-solid fa-quote-left text-4xl text-slate-700/30 absolute -top-4 -left-2"></i>
+                        <div id="responseResult"
+                            class="text-brand-text italic leading-relaxed pl-8 relative z-10 prose prose-invert prose-lg">
+                            ---
+                        </div>
+                    </div>
+                    <button onclick="copyResponse()"
+                        class="mt-8 flex items-center justify-center w-full py-3 rounded-xl bg-brand-card hover:bg-slate-700 text-brand-orange font-semibold transition-all border border-brand-orange/20 hover:border-brand-orange/50 group active:scale-[0.98]">
+                        <i class="fa-regular fa-copy mr-3 group-hover:scale-110 transition-transform"></i> Copiar
+                        Resposta
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+    <style>
+        .animate-fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.5s ease-out forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</body>
+
+</html>

@@ -1,15 +1,3 @@
-import os
-import json
-import google.generativeai as genai
-from dotenv import load_dotenv
-
-# Carrega a chave do arquivo .env
-load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-# Modelo estável recomendado para 2026
-MODEL_NAME = 'gemini-2.5-flash-lite' 
-model = genai.GenerativeModel(MODEL_NAME)
 
 import json
 import os
@@ -18,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel('gemini-2.0-flash') # Modelo estável de 2026
+model = genai.GenerativeModel('gemini-2.5-flash') # Modelo estável de 2026
 
 def analisar_com_ia(texto_limpo):
     # Prompt que funde as definições de categoria e a persona da AutoU
@@ -60,10 +48,8 @@ def analisar_com_ia(texto_limpo):
     except Exception as e:
         # Em 2026, erros de limite de taxa (429) são comuns se o RPM for excedido
         return {
-            "categoria": "Erro",
+            "categoria": "Estourou o limite de taxa",
             "confianca": "0%",
-            "resposta_sugerida": "Recebemos sua mensagem e daremos retorno em breve.",
+            "resposta_sugerida": "Testa depois",
             "erro_detalhado": str(e)
         }
-    
-
