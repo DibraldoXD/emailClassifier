@@ -20,8 +20,8 @@ def analisar_com_ia(texto_limpo, texto_bruto):
     Email para classificação: {texto_limpo}
 
     CRITÉRIOS DE CLASSIFICAÇÃO:
-    - 'Produtivo': Requisições, dúvidas técnicas, status de boletos ou envio de arquivos.
-    - 'Improdutivo': Saudações, agradecimentos, mensagens festivas ou spans.
+    - 'Produtivo': Requisições, dúvidas técnicas, status de boletos, envio de arquivos ou que necessitem de suporte.
+    - 'Improdutivo': E-mails vazios ou sem sentido, Saudações, agradecimentos, mensagens festivas ou spans.
 
     Email para resposta: {texto_bruto}
 
