@@ -48,9 +48,9 @@ def analisar_com_ia(texto_limpo):
             
             return resultado
 
-        except Exception as e:
+        except exceptions.ResourceExhausted as e:
             if tentativa < max_tentativas - 1:
-                tempo_espera = (2 ** tentativa) + random.uniform(0, 1, 2, 3)
+                tempo_espera = (10 ** tentativa) + random.uniform(0, 2) 
                 print(f" Limite 429 atingido. Tentativa {tentativa + 1}. Reiniciando em {tempo_espera:.2f}s...")
                 time.sleep(tempo_espera)
                 continue
@@ -58,7 +58,7 @@ def analisar_com_ia(texto_limpo):
                 return {
                     "categoria": "Estourou o limite de taxa",
                     "confianca": "0%",
-                    "resposta_sugerida": "Testa depois",
+                    "resposta_sugerida": "Recebemos sua mensagem e daremos retorno em breve.",
                     "erro_detalhado": str(e)
                 }
 
