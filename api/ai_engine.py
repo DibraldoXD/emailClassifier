@@ -1,7 +1,9 @@
-
+import time
+import random
 import json
 import os
 import google.generativeai as genai
+from google.api_core import exceptions
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -9,6 +11,7 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 model = genai.GenerativeModel('gemini-2.5-flash') # Modelo estável de 2026
 
 def analisar_com_ia(texto_limpo):
+    max_tentativas = 3
     # Prompt que funde as definições de categoria e a persona da AutoU
     prompt = f"""
     Você é um assistente de marketing financeiro da empresa AutoU. 
@@ -31,25 +34,50 @@ def analisar_com_ia(texto_limpo):
       "resposta_sugerida": "Sua resposta aqui"
     }}
     """
-    
-    try:
+    for tentativa in range(max_tentativas):
+        try:
         # Chamada única à IA
-        response = model.generate_content(prompt)
-        json_text = response.text.replace('```json', '').replace('```', '').strip()
-        resultado = json.loads(json_text)
+            response = model.generate_content(prompt)
+            json_text = response.text.replace('```json', '').replace('```', '').strip()
+            resultado = json.loads(json_text)
 
-        # --- REGRA DE NEGÓCIO (FUSÃO DA LÓGICA) ---
-        # Garante a resposta padrão exata para improdutivos conforme solicitado
-        if resultado.get("categoria") == "Improdutivo":
-            resultado["resposta_sugerida"] = "Agradecemos o contato. Desejamos um excelente dia!"
+            # --- REGRA DE NEGÓCIO (FUSÃO DA LÓGICA) ---
+            # Garante a resposta padrão exata para improdutivos conforme solicitado
+            if resultado.get("categoria") == "Improdutivo":
+                resultado["resposta_sugerida"] = "Agradecemos o contato. Desejamos um excelente dia!"
+            
+            return resultado
+
+        except Exception as e:
+            if tentativa < max_tentativas - 1:
+                tempo_espera = (2 ** tentativa) + random.uniform(0, 1, 2, 3)
+                print(f" Limite 429 atingido. Tentativa {tentativa + 1}. Reiniciando em {tempo_espera:.2f}s...")
+                time.sleep(tempo_espera)
+                continue
+            else:
+                return {
+                    "categoria": "Estourou o limite de taxa",
+                    "confianca": "0%",
+                    "resposta_sugerida": "Testa depois",
+                    "erro_detalhado": str(e)
+                }
+
+        except Exception as e:
+            # Tratamento de outros erros (JSON inválido, conexão, etc)
+            return {
+                "categoria": "Erro de Processamento",
+                "confianca": "0%",
+                "resposta_sugerida": "Recebemos sua mensagem e daremos retorno em breve.",
+                "erro_detalhado": str(e)
+            }
+
+
+
+
+ 
+    
+  
         
-        return resultado
 
-    except Exception as e:
-        # Em 2026, erros de limite de taxa (429) são comuns se o RPM for excedido
-        return {
-            "categoria": "Estourou o limite de taxa",
-            "confianca": "0%",
-            "resposta_sugerida": "Testa depois",
-            "erro_detalhado": str(e)
-        }
+        
+        
