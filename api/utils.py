@@ -4,7 +4,27 @@ import PyPDF2
 import io
 from nltk.corpus import stopwords
 
-nltk.download('stopwords')
+import nltk
+import os
+
+# 1. Define um diretório em /tmp (único local com permissão de escrita no Vercel)
+nltk_data_dir = '/tmp/nltk_data'
+
+# 2. Cria o diretório se ele não existir
+if not os.path.exists(nltk_data_dir):
+    os.makedirs(nltk_data_dir, exist_ok=True)
+
+# 3. Indica ao NLTK para procurar dados também nessa pasta
+nltk.data.path.append(nltk_data_dir)
+
+# 4. Realiza o download especificando o diretório de destino
+try:
+    nltk.data.find('corpora/stopwords')
+except LookupError:
+    nltk.download('stopwords', download_dir=nltk_data_dir)
+
+# Agora você pode definir suas stop_words normalmente
+from nltk.corpus import stopwords
 stop_words = set(stopwords.words('portuguese'))
 
 def extrair_texto_arquivo(file_bytes, filename):
