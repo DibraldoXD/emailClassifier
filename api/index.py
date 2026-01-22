@@ -15,7 +15,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/analisar")
+@app.post("/api/analisar")
 async def rota_analisar(
     texto: str = Form(None), 
     arquivo: UploadFile = File(None)

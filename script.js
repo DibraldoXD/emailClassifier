@@ -25,7 +25,7 @@ async function processarEmail() {
 
     try {
         // Conexão com o backend local do desafio
-        const response = await fetch('/analisar', {
+        const response = await fetch('/api/analisar', {
             method: 'POST',
             body: formData
         });
