@@ -1,11 +1,13 @@
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
-from utils import extrair_texto_arquivo, pre_processar_texto
-from ai_engine import analisar_com_ia
+# No Vercel, as importações devem considerar a estrutura da pasta /api
+from api.utils import extrair_texto_arquivo, pre_processar_texto
+from api.ai_engine import analisar_com_ia
 
 app = FastAPI(title="AutoU Email Classifier")
 
-# Configuração de CORS para permitir acesso do seu Frontend HTML
+# Configuração de CORS: No deploy, isso garante que seu frontend (Vercel)
+# consiga conversar com o backend (Vercel) sem bloqueios.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -35,7 +37,5 @@ async def rota_analisar(
     
     return resultado
 
-if __name__ == "__main__":
-    import uvicorn
-    # Inicia o servidor local na porta 8000
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+# REMOVIDO: O bloco if __name__ == "__main__" e uvicorn.run().
+# O Vercel ignora essa parte, pois ele mesmo instanciará o 'app'.
