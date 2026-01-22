@@ -1,6 +1,38 @@
+/**
+ * Lógica de Front-end para Triagem de Emails AutoU
+ * Implementação: João Cilli (UNIFEI)
+ */
+
+// --- NOVA FUNÇÃO DE UX: EXCLUSIVIDADE MÚTUA ---
+function gerenciarCampos() {
+    const textInput = document.getElementById('emailText');
+    const fileInput = document.getElementById('emailFile');
+    const containerTexto = document.getElementById('containerTexto');
+    const containerUpload = document.getElementById('containerUpload');
+
+    const temTexto = textInput.value.trim().length > 0;
+    const temArquivo = fileInput.files.length > 0;
+
+    if (temTexto) {
+        // Desabilita Upload
+        containerUpload.classList.add('opacity-30', 'pointer-events-none', 'grayscale');
+        containerUpload.style.cursor = 'not-allowed';
+    } else if (temArquivo) {
+        // Desabilita Texto
+        containerTexto.classList.add('opacity-30', 'pointer-events-none');
+        textInput.disabled = true;
+    } else {
+        // Habilita ambos (Estado Inicial)
+        containerUpload.classList.remove('opacity-30', 'pointer-events-none', 'grayscale');
+        containerUpload.style.cursor = 'pointer';
+        containerTexto.classList.remove('opacity-30', 'pointer-events-none');
+        textInput.disabled = false;
+    }
+}
 
 // 1. FUNÇÃO PARA PROCESSAR EMAIL
 async function processarEmail() {
+    console.log("Iniciando processamento do email...");
     const text = document.getElementById('emailText').value;
     const fileInput = document.getElementById('emailFile');
     const loading = document.getElementById('loading');
@@ -18,13 +50,12 @@ async function processarEmail() {
     const formData = new FormData();
     if (fileInput.files.length > 0) {
         formData.append('arquivo', fileInput.files[0]);
-    }
-    if (text.trim()) {
+    } else if (text.trim()) {
         formData.append('texto', text);
     }
 
     try {
-        // Conexão com o backend local do desafio
+        // Rota configurada para o ambiente Vercel/FastAPI
         const response = await fetch('/api/analisar', {
             method: 'POST',
             body: formData
@@ -34,7 +65,6 @@ async function processarEmail() {
 
         const data = await response.json();
 
-        // Renderização dos dados da IA Gemini
         const category = data.categoria || 'Não Identificado';
         const confidence = data.confianca || '0%';
         const responseText = data.resposta_sugerida || 'Sem sugestão.';
@@ -43,13 +73,11 @@ async function processarEmail() {
         document.getElementById('confidenceResult').innerText = confidence;
         document.getElementById('responseResult').innerText = responseText;
 
-        // Animação da barra de confiança
         const confidenceValue = parseInt(confidence.replace('%', '')) || 0;
         setTimeout(() => {
             document.getElementById('confidenceBar').style.width = `${confidenceValue}%`;
         }, 100);
 
-        // Ajuste visual dinâmico
         const card = document.getElementById('categoryCard');
         const confidenceBar = document.getElementById('confidenceBar');
 
@@ -69,7 +97,7 @@ async function processarEmail() {
 
     } catch (error) {
         console.error("Erro no processamento:", error);
-        alert("Erro ao conectar com o Backend. Verifique se o servidor FastAPI/Uvicorn está rodando!");
+        alert("Erro ao conectar com o Backend. Verifique se o servidor está ativo!");
     } finally {
         loading.classList.add('hidden');
     }
@@ -100,6 +128,9 @@ function mostrarArquivoSelecionado() {
 
         btnRemove.classList.remove('hidden');
         btnRemove.classList.add('flex');
+
+        // NOVO: Chama o gerenciador para bloquear o texto
+        gerenciarCampos();
     }
 }
 
@@ -124,6 +155,9 @@ function removerArquivo(event) {
 
     btnRemove.classList.add('hidden');
     btnRemove.classList.remove('flex');
+
+    // NOVO: Chama o gerenciador para reabilitar o texto
+    gerenciarCampos();
 }
 
 // 4. FUNÇÃO DE CÓPIA

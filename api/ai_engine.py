@@ -10,23 +10,26 @@ load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 model = genai.GenerativeModel('gemini-2.5-flash') # Modelo estável de 2026
 
-def analisar_com_ia(texto_limpo):
+def analisar_com_ia(texto_limpo, texto_bruto):
     max_tentativas = 3
     # Prompt que funde as definições de categoria e a persona da AutoU
     prompt = f"""
     Você é um assistente de marketing financeiro da empresa AutoU. 
     Analise o email abaixo e retorne um JSON com classificação, confiança e resposta.
 
+    Email para classificação: {texto_limpo}
+
     CRITÉRIOS DE CLASSIFICAÇÃO:
     - 'Produtivo': Requisições, dúvidas técnicas, status de boletos ou envio de arquivos.
     - 'Improdutivo': Saudações, agradecimentos, mensagens festivas ou spans.
+
+    Email para resposta: {texto_bruto}
 
     DIRETRIZES PARA A RESPOSTA:
     - Se for 'Produtivo', gere uma resposta curta, profissional e empática informando que o time técnico já está analisando.
     - Se for 'Improdutivo', a resposta sugerida deve ser apenas um agradecimento genérico.
 
-    Email para análise: {texto_limpo}
-
+    
     Retorne APENAS um JSON no formato:
     {{
       "categoria": "Produtivo ou Improdutivo",

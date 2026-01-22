@@ -41,7 +41,7 @@ def pre_processar_texto(texto):
     
     # 2. Limpeza de caracteres especiais (mantendo letras, números e espaços)
     # O \s no final permite que o regex preserve os espaços que acabamos de criar
-    texto = re.sub(r'[^a-zA-Záàâãéèêíïóôõöúçñ0-9\s]', '', texto)
+    texto = re.sub(r'[^a-zA-Záàâãéèêíïóôõöúçñ\s]', '', texto)
     
     # 3. O split() sem argumentos remove múltiplos espaços seguidos e quebras residuais
     palavras = [w for w in texto.split() if w not in stop_words]

@@ -44,7 +44,7 @@ async def rota_analisar(
 
     # 2. Processamento e IA
     texto_limpo = pre_processar_texto(conteudo_bruto)
-    resultado = analisar_com_ia(texto_limpo)
+    resultado = analisar_com_ia(texto_limpo, conteudo_bruto)
     
     return resultado
 
