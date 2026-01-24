@@ -4,26 +4,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AutoU | emailClassifier
-    </title>
+    <title>AutoU | emailClassifier</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <script>
+        // Tailwind CSS Configuração das cores e fontes 
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
                     colors: {
                         brand: {
-                            orange: '#f97316', // Laranja do Logo (tailwind orange-500)
-                            dark: '#0f172a',   // Azul Marinho Fundo (tailwind slate-900)
-                            card: '#1e293b',   // Azul Marinho Cartões (tailwind slate-800)
-                            text: '#e2e8f0',   // Texto Claro (tailwind slate-200)
-                            muted: '#94a3b8'   // Texto Muted (tailwind slate-400)
+                            orange: '#f97316', // Cor principal (Laranja)
+                            dark: '#0f172a',   // Fundo escuro
+                            card: '#1e293b',   // Fundo dos cartões
+                            text: '#e2e8f0',   // Cor do texto principal
+                            muted: '#94a3b8'   // Cor para textos secundários
                         }
                     }
                 }
@@ -32,30 +31,17 @@
     </script>
 
     <style>
-        /* Efeito de vidro para o tema escuro */
+        /* Efeito de Blur */
         .glass {
             background: rgba(30, 41, 59, 0.7);
-            /* slate-800 com transparência */
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        /* Loader com a cor laranja da marca */
+        /* Animação do Carregamento */
         .loader {
             border-top-color: #f97316;
-            /* brand.orange */
-            -webkit-animation: spinner 1.5s linear infinite;
             animation: spinner 1.5s linear infinite;
-        }
-
-        @-webkit-keyframes spinner {
-            0% {
-                -webkit-transform: rotate(0deg);
-            }
-
-            100% {
-                -webkit-transform: rotate(360deg);
-            }
         }
 
         @keyframes spinner {
@@ -68,7 +54,7 @@
             }
         }
 
-        /* Estilização da barra de rolagem */
+        /* Personalização da Barra de Rolagem */
         ::-webkit-scrollbar {
             width: 8px;
         }
@@ -80,10 +66,6 @@
         ::-webkit-scrollbar-thumb {
             background: #f97316;
             border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #ea580c;
         }
     </style>
 </head>
@@ -227,8 +209,10 @@
     <script src="/static/script.js"></script>
 
     <style>
+        /* Animações */
         .animate-fade-in {
             animation: fadeIn 0.5s ease-out forwards;
+
         }
 
         .animate-fade-in-up {

@@ -1,6 +1,8 @@
 fastapi
-google-generativeai
+uvicorn
 python-multipart
-PyPDF2
+google-generativeai
+google-api-core
 python-dotenv
 nltk
+PyPDF2
