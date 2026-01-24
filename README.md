@@ -43,21 +43,25 @@ O servidor estará disponível em http://127.0.0.1:8000.
 
 Estrutura do Projeto:
 
+```
+autou-email-classifier/
 ├── api/
-|   |
-│   ├── ai_engine.py      # Conexão e lógica com Google Gemini
-|   |
-│   └── utils.py          # Extração de texto e pré-processamento
+│   ├── ai_engine.py      # Conexão com Google Gemini e lógica de prompt
+│   └── utils.py          # Extração de PDF/TXT e limpeza de dados
 ├── static/
-│   ├── index.html        # Interface principal
-│   ├── script.js         # Lógica de front-end e chamadas de API
-│   └── autou_logo.jpg    # Identidade visual
-├── main.py               # Ponto de entrada da aplicação FastAPI
-├── requirements.txt      # Dependências do sistema
-└── vercel.json           # Configurações de deploy
+│   ├── index.html        # Interface (HTML5/Tailwind)
+│   ├── script.js         # Lógica de exclusividade e fetch da API
+│   └── autou_logo.jpg    # Identidade visual da AutoU
+├── .env                  # Variáveis sensíveis (API Keys)
+├── .gitignore            # Arquivos ignorados pelo Git (ex: .env, __pycache__)
+├── main.py               # Ponto de entrada do FastAPI e rotas
+├── requirements.txt      # Lista de dependências Python
+└── vercel.json           # Configuração de rotas para deploy serverlesss
+```
 
 Autor:
 Desenvolvido por João Luiz de Miranda Cilli. O projeto visa aplicar conceitos de IA e desenvolvimento full-stack para resolver problemas reais de produtividade.
+
 
 
 
