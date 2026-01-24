@@ -44,7 +44,9 @@ O servidor estará disponível em http://127.0.0.1:8000.
 Estrutura do Projeto:
 
 ├── api/
+|   |
 │   ├── ai_engine.py      # Conexão e lógica com Google Gemini
+|   |
 │   └── utils.py          # Extração de texto e pré-processamento
 ├── static/
 │   ├── index.html        # Interface principal
@@ -56,6 +58,7 @@ Estrutura do Projeto:
 
 Autor:
 Desenvolvido por João Luiz de Miranda Cilli. O projeto visa aplicar conceitos de IA e desenvolvimento full-stack para resolver problemas reais de produtividade.
+
 
 
 
